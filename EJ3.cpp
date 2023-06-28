@@ -1,5 +1,5 @@
 
-bool datosInvalidos(string especialidad,unsigned int horaDesde,unsigned int horaHastas, string modeloDeAuto){
+bool datosInvalidos(String especialidad,unsigned int horaDesde,unsigned int horaHastas, string modeloDeAuto){
 	bool noCumpleRequisitos=false;
 	if (especialidad==NULL || modeloDeAuto==NULL || horaDesde>horaHasta){
 		noCumpleRequisitos=true;
