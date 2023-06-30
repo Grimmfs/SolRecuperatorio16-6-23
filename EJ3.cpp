@@ -1,5 +1,5 @@
-//Recibe una especialidad, dos horarios, sabiendo que uno debe ser mayor que otro y un modelo
-//Devuelve falso si alguno de estos datos no existe o si los horarios no cumplen lo que dicen cumplir, verdadero en caso contrario.
+//Pre: Recibe una especialidad, dos horarios, sabiendo que uno debe ser mayor que otro y un modelo
+//Post: Devuelve falso si alguno de estos datos no existe o si los horarios no cumplen lo que dicen cumplir, verdadero en caso contrario.
 bool datosValidos(string especialidad,unsigned int horaDesde,unsigned int horaHasta, string modeloDeAuto){
 	bool noCumpleRequisitos=false;
 	if (especialidad==NULL || modeloDeAuto==NULL || horaDesde==NULL || horaHasta== NULL || horaDesde>horaHasta){
@@ -58,8 +58,11 @@ bool tieneTurnoDisponible(Lista<Turno*>* turnosDelTaller, unsigned int horaDesde
 	return tieneTurno;
 }
 
-
-
+//Pre:
+//Recibe una Cola de Talleres, una especialidad, un modelo de auto y un horario en el que se puede ir al taller
+/*Post::
+ Devuelve una Lista con todos aquellos talleres en la cola que que atendian la especialidad, el modelo, 
+y estaban desocupados en el horario pedido.*/
 Lista <Taller*>* buscarTallerConTurnoLibre(Cola<Taller*>* talleresDisponibles, string especialidad,
 					    unsigned int horaDesde,unsigned int horaHastas, string modeloDeAuto){
 if (!datosValidos(especialidad,horaDesde,horaHasta,modeloDeAuto)){
