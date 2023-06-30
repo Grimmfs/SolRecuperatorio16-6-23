@@ -1,5 +1,6 @@
-
-bool datosInvalidos(string especialidad,unsigned int horaDesde,unsigned int horaHasta, string modeloDeAuto){
+//Recibe una especialidad, dos horarios, sabiendo que uno debe ser mayor que otro y un modelo
+//Devuelve falso si alguno de estos datos no existe o si los horarios no cumplen lo que dicen cumplir, verdadero en caso contrario.
+bool datosValidos(string especialidad,unsigned int horaDesde,unsigned int horaHasta, string modeloDeAuto){
 	bool noCumpleRequisitos=false;
 	if (especialidad==NULL || modeloDeAuto==NULL || horaDesde==NULL || horaHasta== NULL || horaDesde>horaHasta){
 		noCumpleRequisitos=true;
@@ -7,18 +8,37 @@ bool datosInvalidos(string especialidad,unsigned int horaDesde,unsigned int hora
 	return noCumpleRequisitos;
 }
 
-bool stringPerteneceALista(string string,Lista<String*>* listaString ){
-	listaString->reiniciarCursor();
-	bool perteneceALista=false;
-	while(listaString->avanzarCursor() && !perteneceALista){
-		if(listaString->obtenerCursor==string){
-			perteneceALista=true;
+//Pre: Recibe una especialidad y una lista de especialidades
+//Post: Devuelve verdadero si alguno de las especialidad es igual a la recibida
+bool atiendeEspecialidad(string especialidad,Lista<String*>* especialidadesAtendidas ){
+	especialidadesAtendidas->reiniciarCursor();
+	bool atiendeEspecialidad=false;
+	while(especialidadesAtendidas->avanzarCursor() && !atiendeEspecialidad){
+		if(especialidadesAtendidas->obtenerCursor==string){
+			atiendeEspecialidad=true;
 		}
 
 	}
 	return perteneceALista;
 	
 }
+//Pre: Recibe un modelo y una lista de modelos
+//Post: Devuelve verdadero si alguno de los modelos es igual al recibido
+bool tieneElModelo(string modelo,Lista<String*>* modelos ){
+	modelos->reiniciarCursor();
+	bool tieneModelo=false;
+	while(modelos->avanzarCursor() && !tieneModelo){
+		if(modelos->obtenerCursor==modelo){
+			tieneModelo=true;
+		}
+
+	}
+	return tieneModelo;
+	
+}
+
+//Pre:  Recibe una lista de turnos y un horario pedido
+//Post: Devuelve verdadero si tiene turno  algun turno desocupado tiene ese horario, falso en caso contrario
 bool tieneTurnoDisponible(Lista<Turno*>* turnosDelTaller, unsigned int horaDesdeSolicitada, unsigned  int horaHastaSolicitada){
 	bool tieneTurno=false, turnoOcupado, horaDesdeDisponible, horaHastaDisponible; 
 	turnosDelTaller->reiniciarCursor();
@@ -42,25 +62,18 @@ bool tieneTurnoDisponible(Lista<Turno*>* turnosDelTaller, unsigned int horaDesde
 
 Lista <Taller*>* buscarTallerConTurnoLibre(Cola<Taller*>* talleresDisponibles, string especialidad,
 					    unsigned int horaDesde,unsigned int horaHastas, string modeloDeAuto){
-if (datosInvalidos(especialidad,horaDesde,horaHasta,modeloDeAuto)){
+if (!datosValidos(especialidad,horaDesde,horaHasta,modeloDeAuto)){
 	throw "datos Invalidos."
 }
-bool atiendeEspecialidad, noAceptaModelo, hayTurnoDesocupado;
 Lista <Taller*>* talleresConTurnoLibre=new Lista<Taller*>*;
-taller* tallerActual;
-talleresDisponibles->reiniciarCursor();
 
-while(talleresDisponibles->avanzarCursor()){
-	tallerActual=talleresDisponibles->obtenerCursor();
-	atiendeEspecialidad=stringPerteneceALista(especialidad,tallerActual->obtenerEspecialidades())
-	if (atiendeEspecialidad){
-		noAceptaModelo=stringPerteneceALista(tallerActual->modelosNoAtendidos(),modeloDeAuto);
-		if (!noAceptaModelo){
-			hayTurnoDesocupado=tieneTurnoDisponible(tallerActual->obtenerTurnos(),horaDesde,horaHasta);
-			if (hayTurnoDesocupado){
-				talleresConTurnoLibre->add(tallerActual);
-				}
-			}
+while(!talleresDisponibles->vacia()){
+	Taller* tallerActual=talleresDisponibles->desacolar();
+	
+	if (atiendeEspecialidad(especialidad,tallerActual->obtenerEspecialidades() && !tieneElModelo(tallerActual->modelosNoAtendidos(),modeloDeAuto)&&
+				tieneTurnoDisponible(tallerActual->obtenerTurnos(),horaDesde,horaHasta)){
+		talleresConTurnoLibre->add(tallerActual);
+				
 		}
 	}
 	return talleresConTurnoLibre;
